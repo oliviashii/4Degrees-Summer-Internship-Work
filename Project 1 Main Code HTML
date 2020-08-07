@@ -1,0 +1,10 @@
++						{% for eachColumn in column_list if eachColumn.id|string in settings_dict.columns.split('||') %}
++							{% if loop.index0 == 0 %}
++							{% elif eachColumn.id in sumVar[catIndex] %}
++								<th>
++									Total: {{sumVar[catIndex][eachColumn.id]}}
++								</th>
++							{% else %}
++								<th></th>
++							{% endif %}
++						{% endfor %}
