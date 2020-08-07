@@ -1,0 +1,16 @@
+## If column type is numeric, get sum by category
++		dictPerCat = {}
++		for count, cat in enumerate(dealList):
++			dictOfSums = {}
++			if isinstance(cat, dict):
++				for eachColumn in columnList:
++					sum = 0.0
++					if eachColumn['type'] == 'Currency' or eachColumn['type'] == 'Number' or eachColumn['name'] == 'Employee Count':
++						for deal in cat['deals_list']:
++							value = deal['column_' + str(eachColumn['id'])]['value']
++							if isinstance(value, str):
++								value = float(''.join(i for i in deal['column_' + str(eachColumn['id'])]['value'] if (i.isdigit() or i in '.')))
++							sum = sum + value
++						dictOfSums[eachColumn['id']] = sum
++				##{category : dict{column_id : sum}}
++				dictPerCat[count] = dictOfSums
