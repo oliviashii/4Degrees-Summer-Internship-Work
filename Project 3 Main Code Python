@@ -1,0 +1,9 @@
+ 			for eachContact in associateContactsQuery:
+ 				newContact = {}
+ 				newContact['id'] = eachContact.id
++				newContact['email'] = eachContact.emails[0].email
++				newContact['photo'] = eachContact.photo
+ 				newContact['full_name'] = eachContact.full_name
++				newContact['initials'], newContact['init_category'] = get_contact_initials(eachContact)
+ 				if newContact['full_name'] is None or newContact['full_name'] == '':
+ 					newContact['full_name'] = eachContact.emails[0].email
