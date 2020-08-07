@@ -1,0 +1,128 @@
+ function confirm_import(index) {
+ ...
++	// Hide confirm/skip buttons
+ 	var messageButtons = document.getElementById('status_buttons_' + index);
+ 	messageButtons.style.display = 'none';
+ 
+ 	// Add undo button
+ 	var undoButton = document.createElement('button');
+ 	undoButton.classList = 'btn btn-tertiary pull-right';
+ 	undoButton.innerText = 'Undo';
+ 	messageText.append(undoButton);
+ 
+ 	// Add onclick function to Undo button:
+ 	undoButton.addEventListener("click", function() {
+ 		messageText.removeChild(undoButton);
+ 		messageText.removeChild(checkIcon);
++		messageText.style.display = 'block';
++		messageButtons.style.display = 'inline';
++		post_edit_feedback(index);
+ 	});
+  ...
+}
+
+function skip_import(index) {
++	// Remove error message style
+ 	var statusDiv = document.getElementById('status_div_' + index);
+ 	statusDiv.classList.remove('error');
+ 	statusDiv.classList.remove('unconfirmed');
+ 	statusDiv.classList.remove('duplicate');
+  
++	//Check if this was originally an error or a guess
+ 	if (statusDiv.getAttribute('data-guess-id') == 'None') {
++		var messageText = document.getElementById('status_text_' + index);
++		var ignoreButton = document.getElementById('ignoreButton');
++		messageText.style.display = 'none';
++		if (ignoreButton != null) {
++			ignoreButton.style.display = 'none';
++		}
++		// Gray out the associated table, remove the alert styling
++		document.getElementById('sample_table_' + index).classList.add('deselected');
++		document.getElementById('column_select_' + index).classList.remove('error');
++		document.getElementById('select_' + index).classList.add('skip-import');
+ 
++		// Create new message text and undo button
+ 		var newMessage = document.createElement('div');
+ 		newMessage.classList = 'status-message-text';
++		newMessage.innerHTML = 'Column will <b>not</b> be imported';
+ 
++		// Add undo button
++		var undoButton = document.createElement('button');
++		undoButton.classList = 'btn btn-tertiary pull-right';
++		undoButton.innerText = 'Undo';
++		newMessage.append(undoButton);
+ 
+ 		statusDiv.appendChild(newMessage);
+ 
+ 		// Add onclick function to Undo button:
++		undoButton.addEventListener("click", function() {
++			// Removes newMessage and reverts to original display
+ 			statusDiv.removeChild(newMessage);
++			messageText.style.display = 'block';
++			if (ignoreButton != null) {
++				// Ungray out table and apply red warning 
++				document.getElementById('sample_table_' + index).classList.remove('deselected');
++				document.getElementById('column_select_' + index).classList.add('error');
++				statusDiv.classList.add('error');
++				ignoreButton.style.display = 'inline';
++			}
+ 		});
+ 
+ 	} else {
+  +		// Hide content
++		var messageText = document.getElementById('status_text_' + index);
++		var messageButtons = document.getElementById('status_buttons_' + index);
++		messageText.style.display = 'none';
++		if (messageButtons != null) {
++			messageButtons.style.display = 'none';
+ 		}
+
++		// Select 'none' option in dropdown
++		document.getElementById('select_' + index).selectedIndex = 0;	
+ 
++		// Gray out the associated table, remove the alert styling
++		document.getElementById('sample_table_' + index).classList.add('deselected');
++		document.getElementById('column_select_' + index).classList.remove('error');
++		document.getElementById('select_' + index).classList.add('skip-import');
++
++		// Create new message text
++		var newMessage = document.createElement('div');
++		newMessage.classList = 'status-message-text';
++		newMessage.innerHTML = 'Column will <b>not</b> be imported';
++
++		// Add undo button
+ 		var undoButton = document.createElement('button');
+ 		undoButton.classList = 'btn btn-tertiary pull-right';
+ 		undoButton.innerText = 'Undo';
++		newMessage.append(undoButton);
++
++		statusDiv.appendChild(newMessage);
+ 
+ 		// Add onclick function to Undo button:
+ 		undoButton.addEventListener("click", function() {
++			// Removes newMessage and reverts to original display
+ 			statusDiv.removeChild(newMessage);
++			statusDiv.classList.add('unconfirmed');
++			document.getElementById('sample_table_' + index).classList.remove('deselected');
++			document.getElementById('select_' + index).classList.remove('skip-import');
++			
++			// Get id of the last selected field from the data-guess-id attribute 
++			var previousID = statusDiv.getAttribute('data-guess-id');
++
++			// Select that previous option in dropdown
++			var fieldOptions = document.getElementById('select_' + index);
++		
++			for (var i = 0; i < fieldOptions.options.length; i++) {
++				if (fieldOptions[i].value == previousID) {
++					fieldOptions.selectedIndex = i;
++				}
++			}
++			
++			// Displays message and buttons
++			messageText.style.display = 'block';
++			if (messageButtons != null) {
++				messageButtons.style.display = 'inline';
++			}
+ 		});
+ 	}
+ 
