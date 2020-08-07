@@ -1,0 +1,15 @@
++						<div id="associate-contact-div-{{contact.id}}" class = "deal-detail-card associated-contact-outer-div">
++							<div class="deal-detail-contact-photo text-center associated-contact-div pull-left">
++								{% if contact.photo != '' and contact.photo != None and contact.photo != 'None' %}
++									<img src="{{contact.photo}}" />
++								{% else %}
++									<div class="contact-initials-div contact-initials-{{contact.init_category}} text-center" style="width: 100%; height: 100%; padding-top: 18px;">
++										<span id="modal-contact-photo" class="contact-initials" style="font-size: 1rem;">{{contact.initials}}</span>	
++									</div>
++								{% endif %}
++							</div>
++							<a id="associate-contact-name-{{contact.id}}" href="#" class="associate-contact-link" onclick="return addContactToDeal('{{deal.id}}', '{{contact.id}}', '{{contact.photo}}', '{{contact.initials}}', '{{contact.init_category}}', '{{contact.full_name.replace("'", "\\'").replace('"', '\\"').replace('<', '&gt;').replace('>', '&lt;')|safe}}')">{{ contact.full_name }}
++								<i title="Associate contact to {{ features.deal_label|lower }}" class="material-icons text-primary add-contact-to-deal-icon">add</i></a>		
++							<br>
++							{{contact.email}}
++						</div>
