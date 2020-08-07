@@ -1,0 +1,18 @@
+ // Called to associate a contact to a deal
+ // Only happens on deal detail, when first navigating to a newly-added deal.
++function addContactToDeal(dealID, contactID, contactPhoto, contactInitials, contactColor, contactName){
+ 	// AJAX request
+ 	var http = new XMLHttpRequest();
++	var params = 'deal_id=' + encodeURIComponent(dealID) + '&contact_id=' + encodeURIComponent(contactID) + '&contact_photo=' + encodeURIComponent(contactPhoto) + '&contact_initials=' + encodeURIComponent(contactInitials) + '&contact_color=' + encodeURIComponent(contactColor) + '&csrf_token=' + encodeURIComponent(csrfToken);
+ 	http.open("POST", 'associate_contact_to_deal', true);
+ ...
+  				// Add to the page
+ 				var newAssociatedContact = document.createElement('div');
+ 				newAssociatedContact.classList = 'deal-detail-card associated-contact-outer-div';
++				if (contactPhoto != '' && contactPhoto != 'None') {
++					newAssociatedContact.innerHTML = '<div class="deal-detail-contact-photo text-center associated-contact-div pull-left"><img src="' + contactPhoto + '" /></div><b><a href="contact?id=' + contactID + '" class="show-loading-gif">' + contactName + '</a></b><span class="pull-right" style="visibility: hidden;"><a id="delete_associated_' + contactID + '" href="remove_contact_from_deal?deal_id=' + dealID + '&contact_id=' + contactID + '&csrf_token=' + encodeURIComponent(csrfToken) + '"  title="Remove from deal"><span class="icon-trash contact-edit-icon deal-detail-delete-note"></span></a></span><br>' + http.response + '</div>';
++				} else {
++					newAssociatedContact.innerHTML = '<div class="deal-detail-contact-photo text-center associated-contact-div pull-left"><div class="contact-initials-div contact-initials-' + contactColor + ' text center" style="width: 100%; height: 100%; padding-top: 18px;"><span id="contact-photo" class="contact-initials" style="font-size: 1rem;">' + contactInitials +'</span></div></div><b><a href="contact?id=' + contactID + '" class="show-loading-gif">' + contactName + '</a></b><span class="pull-right" style="visibility: hidden;"><a id="delete_associated_' + contactID + '" href="remove_contact_from_deal?deal_id=' + dealID + '&contact_id=' + contactID + '&csrf_token=' + encodeURIComponent(csrfToken) + '"  title="Remove from deal"><span class="icon-trash contact-edit-icon deal-detail-delete-note"></span></a></span><br>' + http.response + '</div>';
+ 
++				}
++				
